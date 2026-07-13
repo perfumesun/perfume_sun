@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کارت ویزیت هوشمند - Perfume Sun</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Tahoma, Arial, sans-serif;
+        }
+        body {
+            background: #121212;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* استایل نگهدارنده کارت برای حالت سه بعدی */
+        .card-container {
+            width: 320px;
+            height: 480px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* کلاس چرخیدن کارت */
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #333;
+        }
+
+        .card-face img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* راهنما و دکمه‌ها */
+        .hint {
+            font-size: 14px;
+            color: #b3b3b3;
+            margin-bottom: 30px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .btn-telegram {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #0088cc;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+        }
+
+        .btn-telegram:hover {
+            background-color: #0077b5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- بخش کارت بازی با قابلیت کلیک -->
+    <div class="card-container" onclick="toggleCard(this)">
+        <div class="card-inner">
+            <!-- روی کارت -->
+            <div class="card-face card-front">
+                <img src="front.jpg" alt="روی کارت">
+            </div>
+            <!-- پشت کارت -->
+            <div class="card-face card-back">
+                <img src="back.jpg" alt="پشت کارت">
+            </div>
+        </div>
+    </div>
+
+    <!-- متنی که خواستید زیر کارت نمایش داده بشه -->
+    <div class="hint">برای چرخاندن روی کارت ضربه بزنید</div>
+
+    <!-- دکمه تلگرام -->
+    <a href="https://t.me/perfumeSun2014" target="_blank" class="btn-telegram">
+        کانال تلگرام Perfume Sun
+    </a>
+
+    <script>
+        function toggleCard(card) {
+            card.classList.toggle('flipped');
+        }
+    </script>
+</body>
+</html>
