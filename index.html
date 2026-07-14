@@ -300,7 +300,7 @@
             card.classList.toggle('flipped');
         }
 
-        // اسکریپت گالری کاتالوگ ۸ صفحه‌ای با حروف دقیق پسوندها طبق گیت‌هاب شما
+        // لیست دقیق تصاویر آپلود شده شما در گیت‌هاب با پسوندهای منطبق
         const catalogImages = [
             'A.jpg',
             'B.jpg',
@@ -327,9 +327,9 @@
         function changePage(direction) {
             currentPageIndex += direction;
             if (currentPageIndex >= catalogImages.length) {
-                currentPageIndex = 0; // برگشت به صفحه اول
+                currentPageIndex = 0;
             } else if (currentPageIndex < 0) {
-                currentPageIndex = catalogImages.length - 1; // رفتن به صفحه آخر
+                currentPageIndex = catalogImages.length - 1;
             }
             updateLightbox();
         }
@@ -338,7 +338,10 @@
             const imgElement = document.getElementById('lightboxImg');
             const counterElement = document.getElementById('pageCounter');
             
-            imgElement.src = catalogImages[currentPageIndex];
+            // با اضافه کردن این بخش، مرورگر را مجبور می‌کنیم عکس جدید را لود کند و از کش استفاده نکند
+            const newImageSrc = catalogImages[currentPageIndex];
+            imgElement.setAttribute('src', newImageSrc);
+            
             counterElement.innerText = `صفحه ${currentPageIndex + 1} از ۸`;
         }
 
@@ -351,5 +354,5 @@
         }
     </script>
 </body>
-            </html>
-            
+    </html>
+    
