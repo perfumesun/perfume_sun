@@ -101,6 +101,324 @@
             transition: all 0.3s ease;
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* دکمه کاتالوگ (طلایی) */
+        .btn-catalog {
+            background: linear-gradient(135deg, #d4af37, #aa7c11);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        .btn-catalog:hover {
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        /* دکمه تلگرام (آبی) */
+        .btn-telegram {
+            background: linear-gradient(135deg, #0088cc, #005580);
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3);
+        }
+        .btn-telegram:hover {
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.5);
+        }
+
+        /* دکمه ایتا (نارنجی) */
+        .btn-eitaa {
+            background: linear-gradient(135deg, #e65100, #ff6d00);
+            box-shadow: 0 5px 20px rgba(230, 81, 0, 0.3);
+        }
+        .btn-eitaa:hover {
+            box-shadow: 0 8px 25px rgba(230, 81, 0, 0.5);
+        }
+
+        .btn svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        /* استایل‌های گالری لایت‌باکس کاتالوگ */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 19, 32, 0.95);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .lightbox-content-wrapper {
+            position: relative;
+            max-width: 90%;
+            max-height: 75vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox img {
+            max-width: 100%;
+            max-height: 75vh;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.8);
+            border: 2px solid #d4af37;
+        }
+        .close-btn {
+            position: absolute;
+            top: -45px;
+            right: 0;
+            color: #fff;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .close-btn:hover {
+            color: #d4af37;
+        }
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            background: rgba(0, 0, 0, 0.4);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .nav-btn:hover {
+            background: rgba(212, 175, 55, 0.8);
+            color: #0b1320;
+        }
+        .prev-btn {
+            left: -60px;
+        }
+        .next-btn {
+            right: -60px;
+        }
+        .page-counter {
+            color: #d4af37;
+            font-size: 16px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* بهینه‌سازی دکمه‌های جهت روی موبایل */
+        @media (max-width: 600px) {
+            .prev-btn { left: 5px; }
+            .next-btn { right: 5px; }
+            .nav-btn {
+                background: rgba(0, 0, 0, 0.6);
+                width: 40px;
+                height: 40px;
+                font-size: 30px;
+            }
+            .lightbox-content-wrapper {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- بخش کارت اصلی با قابلیت چرخش -->
+    <div class="card-container" onclick="toggleCard()">
+        <div class="card-inner" id="cardInner">
+            <!-- روی کارت -->
+            <div class="card-face card-front">
+                <img src="front.png" alt="Perfume Sun Front">
+            </div>
+            <!-- پشت کارت -->
+            <div class="card-face card-back">
+                <img src="back.png" alt="Perfume Sun Back">
+            </div>
+        </div>
+    </div>
+
+    <!-- راهنمای چرخش کارت -->
+    <div class="hint">برای چرخاندن کارت روی آن ضربه بزنید</div>
+
+    <!-- بخش دکمه‌ها -->
+    <div class="buttons-wrapper">
+        <!-- دکمه کاتالوگ بازکننده لایت‌باکس ۸ صفحه‌ای -->
+        <div class="btn btn-catalog" onclick="openCatalog()">
+            <svg viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            مشاهده کاتالوگ محصولات
+        </div>
+
+        <!-- دکمه تلگرام -->
+        <a href="https://t.me/perfume_sun" target="_blank" class="btn btn-telegram">
+            <svg viewBox="0 0 24 24">
+                <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.17L7.74 13.3 3.64 12c-.89-.26-.89-.86.19-1.28l16-6.16c.74-.26 1.38.19 1.14 1.14l-2.73 12.84c-.2.95-.77 1.18-1.56.73l-4.16-3.07-2.01 1.94c-.2.2-.4.37-.82.37z"/>
+            </svg>
+            ورود به کانال تلگرام Perfume Sun
+        </a>
+
+        <!-- دکمه ایتا -->
+        <a href="https://eitaa.com/perfumeSun2014" target="_blank" class="btn btn-eitaa">
+            <svg viewBox="0 0 45 45">
+                <path d="M22.5,2C11.18,2,2,11.18,2,22.5S11.18,43,22.5,43,43,33.82,43,22.5,33.82,2,22.5,2Zm8,26.54c-1.48,3.22-4.88,5.13-9.5,5.13s-8.15-2.06-9.61-5.32c-.88-2-1.11-4.75-.41-7.14.76-2.6,2.83-4.89,6.21-6.15,1.15-.43,2.46-.71,3.81-.71,5.13,0,9,2.5,10,6.5A7.05,7.05,0,0,1,31,23.19C30.63,25.92,28.8,28.54,30.5,28.54Z"/>
+                <path d="M21.5,18.81c-2.31,0-4.14,1.47-4.14,3.69s1.83,3.69,4.14,3.69,4.14-1.47,4.14-3.69S23.81,18.81,21.5,18.81Z"/>
+            </svg>
+            ورود به کانال ایتا Perfume Sun
+        </a>
+    </div>
+
+    <!-- گالری لایت‌باکس ۸ صفحه‌ای کاتالوگ -->
+    <div id="catalogLightbox" class="lightbox">
+        <div class="lightbox-content-wrapper">
+            <span class="close-btn" onclick="closeCatalog()">&times;</span>
+            <div class="nav-btn prev-btn" onclick="changePage(-1)">&#10094;</div>
+            <img id="lightboxImg" src="A.jpg" alt="Catalog Page">
+            <div class="nav-btn next-btn" onclick="changePage(1)">&#10095;</div>
+        </div>
+        <div class="page-counter" id="pageCounter">صفحه ۱ از ۸</div>
+    </div>
+
+    <script>
+        // اسکریپت چرخش کارت
+        function toggleCard() {
+            const card = document.querySelector('.card-container');
+            card.classList.toggle('flipped');
+        }
+
+        // اسکریپت گالری کاتالوگ ۸ صفحه‌ای
+        const catalogImages = [
+            'A.jpg',
+            'B.jpg',
+            'C.JPG',
+            'D.JPG',
+            'E.JPG',
+            'F.jpg',
+            'G.jpg',
+            'H.jpg'
+        ];
+        
+        let currentPageIndex = 0;
+
+        function openCatalog() {
+            currentPageIndex = 0;
+            updateLightbox();
+            document.getElementById('catalogLightbox').style.display = 'flex';
+        }
+
+        function closeCatalog() {
+            document.getElementById('catalogLightbox').style.display = 'none';
+        }
+
+        function changePage(direction) {
+            currentPageIndex += direction;
+            if (currentPageIndex >= catalogImages.length) {
+                currentPageIndex = 0; // برگشت به صفحه اول
+            } else if (currentPageIndex < 0) {
+                currentPageIndex = catalogImages.length - 1; // رفتن به صفحه آخر
+            }
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            const imgElement = document.getElementById('lightboxImg');
+            const counterElement = document.getElementById('pageCounter');
+            
+            imgElement.src = catalogImages[currentPageIndex];
+            counterElement.innerText = `صفحه ${currentPageIndex + 1} از ۸`;
+        }
+
+        // بستن لایت‌باکس در صورت کلیک روی فضای خالی پشت آن
+        window.onclick = function(event) {
+            const lightbox = document.getElementById('catalogLightbox');
+            if (event.target == lightbox) {
+                closeCatalog();
+            }
+        }
+    </script>
+</body>
+</html>
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .card-face img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* راهنمای چرخش */
+        .hint {
+            font-size: 14px;
+            color: #d4af37;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-align: center;
+            animation: pulse 2s infinite ease-in-out;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        /* استایل دکمه‌ها */
+        .buttons-wrapper {
+            width: 100%;
+            max-width: 340px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .btn:hover {
             transform: translateY(-2px);
