@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfume Sun - کارت ویزیت هوشمند</title>
+    <title>Perfume Sun - کارت ویزیت هوشمند و کاتالوگ</title>
     <style>
         * {
             box-sizing: border-box;
@@ -30,10 +30,408 @@
             aspect-ratio: 16 / 9;
             perspective: 1000px;
             cursor: pointer;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+
+        /* چرخیدن کارت حول محور عمودی */
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .card-face img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* متن راهنمای انیمیشنی */
+        .hint {
+            font-size: 14px;
+            color: #d4af37;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            animation: pulse 2s infinite ease-in-out;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        /* بخش دکمه‌ها */
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        /* دکمه کاتالوگ طلایی رنگ */
+        .btn-catalog {
+            background: linear-gradient(135deg, #d4af37, #aa841e);
+            color: #0f111a;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+            border: 1px solid #d4af37;
+        }
+
+        .btn-catalog:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        /* دکمه تلگرام */
+        .btn-telegram {
+            background: linear-gradient(135deg, #0088cc, #005580);
+            color: white;
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3);
+        }
+
+        .btn-telegram:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.5);
+        }
+
+        /* دکمه ایتا نارنجی رنگ با طیف شیک */
+        .btn-eitaa {
+            background: linear-gradient(135deg, #ff6f00, #e65100);
+            color: white;
+            box-shadow: 0 5px 20px rgba(230, 81, 0, 0.3);
+            border: 1px solid rgba(255, 111, 0, 0.2);
+        }
+
+        .btn-eitaa:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(230, 81, 0, 0.5);
+        }
+
+        .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* استایل پاپ‌آک کاتالوگ (Modal) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 11, 18, 0.95);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            aspect-ratio: 16 / 9;
+            background: #161925;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        /* اسلایدر داخل پاپ‌آپ */
+        .slider-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        /* دکمه‌های ناوبری اسلایدر */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #d4af37;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .slider-btn:hover {
+            background: #d4af37;
+            color: #121212;
+        }
+
+        .slider-btn.prev {
+            right: 15px;
+        }
+
+        .slider-btn.next {
+            left: 15px;
+        }
+
+        /* دکمه بستن کاتالوگ */
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            z-index: 1010;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 0, 0, 0.6);
+        }
+
+        /* شماره اسلاید */
+        .slide-counter {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- بخش کارت ویزیت با قابلیت چرخش -->
+    <div class="card-container" onclick="toggleCard(this)">
+        <div class="card-inner">
+            <!-- روی کارت (لوگو) -->
+            <div class="card-face card-front">
+                <img src="back.jpg" alt="روی کارت - Perfume Sun">
+            </div>
+            <!-- پشت کارت (اطلاعات تماس) -->
+            <div class="card-face card-back">
+                <img src="front.jpg" alt="پشت کارت - Perfume Sun">
+            </div>
+        </div>
+    </div>
+
+    <!-- راهنمای چرخاندن کارت -->
+    <div class="hint">برای چرخاندن کارت روی آن ضربه بزنید</div>
+
+    <!-- بخش دکمه‌ها -->
+    <div class="buttons-container">
+        <!-- دکمه کاتالوگ محصولات -->
+        <button class="btn btn-catalog" onclick="openCatalog()">
+            <svg viewBox="0 0 24 24">
+                <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/>
+            </svg>
+            مشاهده کاتالوگ محصولات
+        </button>
+
+        <!-- دکمه ورود به تلگرام -->
+        <a href="https://t.me/perfumeSun2014" target="_blank" class="btn btn-telegram">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.53-1.39.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.46-.42-1.4-.88.03-.24.37-.49 1.02-.75 4-.1.74 1.7 5.75 3.38.22.07.46.14.71.21.75.2 1.43.38 1.96.34.49-.04 1.4-.42 1.6-.98.2-.56.2-1.05.14-1.15-.06-.1-.21-.16-.43-.27z"/>
+            </svg>
+            ورود به کانال تلگرام Perfume Sun
+        </a>
+
+        <!-- دکمه ورود به ایتا -->
+        <a href="https://eitaa.com/perfumeSun2014" target="_blank" class="btn btn-eitaa">
+            <svg viewBox="0 0 45 45" style="width: 22px; height: 22px;">
+                <path d="M22.5,2C11.18,2,2,11.18,2,22.5S11.18,43,22.5,43,43,33.82,43,22.5,33.82,2,22.5,2Zm8,26.54c-1.48,3.22-4.88,5.13-9.5,5.13s-8.15-2.06-9.61-5.32c-.88-2-1.11-4.75-.41-7.14.76-2.6,2.83-4.89,6.21-6.15,1.15-.43,2.46-.71,3.81-.71,5.13,0,9,2.5,10,6.5A7.05,7.05,0,0,1,31,23.19C30.63,25.92,28.8,28.54,30.5,28.54Z"/>
+                <path d="M21.5,18.81c-2.31,0-4.14,1.47-4.14,3.69s1.83,3.69,4.14,3.69,4.14-1.47,4.14-3.69S23.81,18.81,21.5,18.81Z"/>
+            </svg>
+            ورود به کانال ایتا Perfume Sun
+        </a>
+    </div>
+
+    <!-- پاپ‌آپ (Modal) کاتالوگ محصولات با ۸ صفحه -->
+    <div id="catalogModal" class="modal">
+        <div class="modal-content">
+            <!-- دکمه بستن پاپ آپ -->
+            <button class="close-modal" onclick="closeCatalog()">&times;</button>
+            
+            <!-- اسلایدر تصاویر کاتالوگ -->
+            <div class="slider-wrapper">
+                <!-- صفحه ۱ -->
+                <div class="slide active">
+                    <img src="A.jpg" alt="کاتالوگ A">
+                </div>
+                <!-- صفحه ۲ -->
+                <div class="slide">
+                    <img src="B.jpg" alt="کاتالوگ B">
+                </div>
+                <!-- صفحه ۳ -->
+                <div class="slide">
+                    <img src="C.JPG" alt="کاتالوگ C">
+                </div>
+                <!-- صفحه ۴ -->
+                <div class="slide">
+                    <img src="D.JPG" alt="کاتالوگ D">
+                </div>
+                <!-- صفحه ۵ -->
+                <div class="slide">
+                    <img src="E.JPG" alt="کاتالوگ E">
+                </div>
+                <!-- صفحه ۶ -->
+                <div class="slide">
+                    <img src="F.jpg" alt="کاتالوگ F">
+                </div>
+                <!-- صفحه ۷ -->
+                <div class="slide">
+                    <img src="G.jpg" alt="کاتالوگ G">
+                </div>
+                <!-- صفحه ۸ -->
+                <div class="slide">
+                    <img src="H.jpg" alt="کاتالوگ H">
+                </div>
+
+                <!-- دکمه‌های جابجایی کاتالوگ -->
+                <button class="slider-btn prev" onclick="changeSlide(-1)">&#10095;</button>
+                <button class="slider-btn next" onclick="changeSlide(1)">&#10094;</button>
+
+                <!-- شماره صفحه فعلی کاتالوگ -->
+                <div class="slide-counter" id="slideCounter">۱ از ۸</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تابع چرخش کارت ویزیت
+        function toggleCard(card) {
+            card.classList.toggle('flipped');
+        }
+
+        // بخش کاتالوگ و اسلایدر
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const counter = document.getElementById('slideCounter');
+        const modal = document.getElementById('catalogModal');
+
+        function openCatalog() {
+            modal.classList.add('show');
+            showSlide(currentSlide);
+        }
+
+        function closeCatalog() {
+            modal.classList.remove('show');
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide >= slides.length) {
+                currentSlide = 0; // بازگشت به صفحه اول در صورت اتمام اسلایدها
+            } else if (currentSlide < 0) {
+                currentSlide = slides.length - 1; // بازگشت به صفحه آخر
+            }
+            showSlide(currentSlide);
+        }
+
+        function showSlide(index) {
+            slides.forEach((slide, idx) => {
+                if (idx === index) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            counter.innerText = `${index + 1} از ${slides.length}`;
+        }
+
+        // بستن پاپ آپ با کلیک روی فضای بیرونی آن
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeCatalog();
+            }
+        }
+    </script>
+</body>
+</html>
             width: 100%;
             height: 100%;
             position: relative;
